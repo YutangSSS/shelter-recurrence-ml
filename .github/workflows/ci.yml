@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Cache public dataset
+        uses: actions/cache@v4
+        with:
+          path: data/*.csv
+          key: aac-4621420f23e9008de4581d971b1a9626d2ccd506
+      - name: Fetch dataset (pinned revision, SHA-256 checked)
+        run: uv run python scripts/fetch_data.py
+      - name: Tests (fingerprint, censoring, time split, beats the base rate)
+        run: uv run pytest -q
+      - name: Fit and score, check the results file is reproduced
+        run: |
+          uv run python recurrence.py
+          git diff --exit-code docs/results.md

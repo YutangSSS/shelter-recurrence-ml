@@ -1,0 +1,20 @@
+[project]
+name = "shelter-recurrence-ml"
+version = "0.1.0"
+description = "Will an animal come back within 180 days of leaving care? Time-split ML with censoring and calibration."
+requires-python = ">=3.11"
+dependencies = ["duckdb>=1.1", "numpy", "pandas>=2.2", "scikit-learn>=1.5"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["shelter"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
